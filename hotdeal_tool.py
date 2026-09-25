@@ -55,12 +55,22 @@ def doc_config():
 def doc_config_tu_env(cfg):
     """Ghi đè config bằng biến môi trường khi chạy trên GitHub Actions"""
     mapping = {
-        "PANCAKE_API_KEY":       "pancake_api_key",
-        "PANCAKE_SHOP_ID":       "pancake_shop_id",
-        "WEBCAKE_API_KEY":       "webcake_api_key",
-        "WEBCAKE_REFRESH_TOKEN": "webcake_refresh_token",
-        "GITHUB_TOKEN_PAT":      "github_token",
+        "PANCAKE_API_KEY":        "pancake_api_key",
+        "PANCAKE_SHOP_ID":        "pancake_shop_id",
+        "WEBCAKE_API_KEY":        "webcake_api_key",
+        "WEBCAKE_REFRESH_TOKEN":  "webcake_refresh_token",
+        "GITHUB_TOKEN_PAT":       "github_token",
+        "SO_LUONG_BAN_TOI_THIEU": "so_luong_ban_toi_thieu",
+        "SO_SP_HIEN_THI":         "so_sp_hien_thi",
     }
+    for env_key, cfg_key in mapping.items():
+        val = os.environ.get(env_key, "")
+        if val:
+            if cfg_key in ("so_luong_ban_toi_thieu", "so_sp_hien_thi"):
+                cfg[cfg_key] = int(val)
+            else:
+                cfg[cfg_key] = val
+    return cfg
     for env_key, cfg_key in mapping.items():
         val = os.environ.get(env_key, "")
         if val:
