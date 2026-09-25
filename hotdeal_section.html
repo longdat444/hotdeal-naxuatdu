@@ -599,6 +599,15 @@ if (HOT_DEAL_DATA.products.length > 0 && checkExpiry()) {
 } else {
   showWaiting();
 }
+
+// Báo chiều cao thật lên parent (Webcake)
+function reportHeight() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ height: h }, '*');
+}
+// Báo ngay khi load và mỗi 500ms cho đến khi ổn định
+reportHeight();
+setInterval(reportHeight, 500);
 </script>
 
 </body>
