@@ -21,9 +21,11 @@ jobs:
 
       - name: Run Hot Deal Tool
         env:
-          PANCAKE_API_KEY:       ${{ secrets.PANCAKE_API_KEY }}
-          PANCAKE_SHOP_ID:       ${{ secrets.PANCAKE_SHOP_ID }}
-          WEBCAKE_API_KEY:       ${{ secrets.WEBCAKE_API_KEY }}
-          WEBCAKE_REFRESH_TOKEN: ${{ secrets.WEBCAKE_REFRESH_TOKEN }}
-          GITHUB_TOKEN_PAT:      ${{ secrets.GH_TOKEN_PAT }}
+          PANCAKE_API_KEY:        ${{ secrets.PANCAKE_API_KEY }}
+          PANCAKE_SHOP_ID:        ${{ secrets.PANCAKE_SHOP_ID }}
+          WEBCAKE_API_KEY:        ${{ secrets.WEBCAKE_API_KEY }}
+          WEBCAKE_REFRESH_TOKEN:  ${{ secrets.WEBCAKE_REFRESH_TOKEN }}
+          GITHUB_TOKEN_PAT:       ${{ secrets.GH_TOKEN_PAT }}
+          SO_LUONG_BAN_TOI_THIEU: ${{ secrets.SO_LUONG_BAN_TOI_THIEU }}
+          SO_SP_HIEN_THI:         ${{ secrets.SO_SP_HIEN_THI }}
         run: python hotdeal_tool.py --auto
