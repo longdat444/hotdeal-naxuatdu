@@ -1,0 +1,37 @@
+name: Auto Hot Deal Update
+
+on:
+  schedule:
+    - cron: '*/30 1-15 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Hot Deal Tool
+        env:
+          PANCAKE_API_KEY:       ${{ secrets.PANCAKE_API_KEY }}
+          PANCAKE_SHOP_ID:       ${{ secrets.PANCAKE_SHOP_ID }}
+          WEBCAKE_API_KEY:       ${{ secrets.WEBCAKE_API_KEY }}
+          WEBCAKE_REFRESH_TOKEN: ${{ secrets.WEBCAKE_REFRESH_TOKEN }}
+          GITHUB_TOKEN_PAT:      ${{ secrets.GH_TOKEN_PAT }}
+        run: python hotdeal_tool.py --auto
+
+      - name: Commit & Push index.html
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Auto update Hot Deal $(date +'%d/%m/%Y %H:%M')"
+          git push
