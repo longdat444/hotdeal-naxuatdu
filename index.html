@@ -458,7 +458,7 @@ body {
 // HOT_DEAL_DATA bên dưới bằng data thật
 // ══════════════════════════════════════════
 var HOT_DEAL_DATA = {
-  "updated": "2026-09-25T10:03:28",
+  "updated": "2026-09-25T10:10:29",
   "expires": "2026-09-25T23:59:59",
   "products": [
     {
@@ -466,7 +466,7 @@ var HOT_DEAL_DATA = {
       "sku": "S120",
       "name": "Set 5 quần chip mix màu - S120",
       "price": "149.000đ",
-      "sold_today": 45,
+      "sold_today": 44,
       "stock": 999,
       "image": "https://content.pancake.vn/2-2609/2026/9/25/3f3f798bbd058e242b34e5393a072f2fe606750a.jpg",
       "link": "https://www.naxuatdu.vn/products/set-5-quan-chip-mix-mau-s120"
@@ -476,7 +476,7 @@ var HOT_DEAL_DATA = {
       "sku": "V105",
       "name": "Chân váy - V105",
       "price": "269.000đ",
-      "sold_today": 24,
+      "sold_today": 22,
       "stock": 999,
       "image": "https://content.pancake.vn/web-media-263/ae/fc/63/5d/0e683875fc955b7077d3a53b6c797c747e4bdae00bec14985f6aff06-w:1402-h:1122-l:1143562-t:image/png.png",
       "link": "https://www.naxuatdu.vn/products/chan-vay-v105"
@@ -486,7 +486,7 @@ var HOT_DEAL_DATA = {
       "sku": "J",
       "name": "HÀNG LẺ SIZE SALE 50% TK - J",
       "price": "92.056đ",
-      "sold_today": 77,
+      "sold_today": 70,
       "stock": 999,
       "image": "",
       "link": "https://www.naxuatdu.vn/products/hang-le-size-sale-50-tk-j"
@@ -599,6 +599,15 @@ if (HOT_DEAL_DATA.products.length > 0 && checkExpiry()) {
 } else {
   showWaiting();
 }
+
+// Báo chiều cao thật lên parent (Webcake)
+function reportHeight() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ height: h }, '*');
+}
+// Báo ngay khi load và mỗi 500ms cho đến khi ổn định
+reportHeight();
+setInterval(reportHeight, 500);
 </script>
 
 </body>
