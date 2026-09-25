@@ -589,9 +589,10 @@ def main():
         push_len_github(cfg)
 
     print("\n" + "=" * 54)
-    print("  ✅ Xong! Bấm Enter để đóng...")
+    print("  ✅ Xong!")
     print("=" * 54)
-    input()
+    if "--auto" not in sys.argv:
+        input("  Bấm Enter để đóng...")
 
 
 if __name__ == "__main__":
