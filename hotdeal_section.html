@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hot Deal hôm nay — Na Xuất Dư</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fff;
+  --surface: #f7f7f7;
+  --border: #ebebeb;
+  --text: #111;
+  --muted: #888;
+  --fire: #e03b2e;
+  --fire-light: #fff1f0;
+  --fire-mid: #ffd9d6;
+  --gold: #c8930a;
+  --gold-light: #fffbee;
+  --bar-fill: #111;
+  --bar-bg: #e8e8e8;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ── WAITING STATE ── */
+.hd-waiting {
+  display: none;
+  padding: 56px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hd-waiting-inner {
+  border: 1.5px solid var(--border);
+  padding: 48px 32px;
+  position: relative;
+}
+
+.hd-waiting-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.hd-waiting-clock {
+  font-size: 52px;
+  font-weight: 300;
+  letter-spacing: -2px;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hd-waiting-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.hd-waiting-dot {
+  position: absolute;
+  top: -5px; left: -5px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.hd-waiting-dot:nth-child(2) { left: auto; right: -5px; }
+.hd-waiting-dot:nth-child(3) { top: auto; bottom: -5px; left: -5px; }
+.hd-waiting-dot:nth-child(4) { top: auto; bottom: -5px; left: auto; right: -5px; }
+
+/* ── ACTIVE STATE ── */
+.hd-section {
+  display: none;
+  padding: 56px 40px 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.hd-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 36px;
+  gap: 24px;
+}
+
+.hd-title-block {}
+
+.hd-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--fire-light);
+  border: 1px solid var(--fire-mid);
+  color: var(--fire);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.hd-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--fire);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hd-title {
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.hd-title strong {
+  font-weight: 600;
+}
+
+/* Countdown */
+.hd-countdown-block {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.hd-countdown-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+
+.hd-countdown {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hd-cd-unit {
+  text-align: center;
+}
+
+.hd-cd-num {
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: -1px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  min-width: 36px;
+  display: block;
+}
+
+.hd-cd-sep {
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--border);
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.hd-cd-label {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Grid */
+.hd-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.hd-card {
+  background: var(--bg);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.15s;
+}
+
+.hd-card:hover { background: #fafafa; }
+
+/* Rank badge */
+.hd-rank {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 2;
+  width: 24px; height: 24px;
+  background: var(--text);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.hd-rank.rank-1 {
+  background: #c8930a;
+  width: 28px; height: 28px;
+  font-size: 13px;
+}
+
+/* Image */
+.hd-img-wrap {
+  aspect-ratio: 3/4;
+  background: var(--surface);
+  overflow: hidden;
+  position: relative;
+}
+
+.hd-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hd-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+}
+
+/* Sold bar */
+.hd-sold-bar-wrap {
+  padding: 14px 16px 0;
+}
+
+.hd-sold-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.hd-sold-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fire);
+}
+
+.hd-sold-count span {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.hd-sold-pct {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.hd-bar {
+  height: 3px;
+  background: var(--bar-bg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.hd-bar-fill {
+  height: 100%;
+  background: var(--fire);
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+
+/* Card body */
+.hd-body {
+  padding: 12px 16px 16px;
+}
+
+.hd-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hd-sku {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+.hd-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hd-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.hd-buy-btn {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--text);
+  border: none;
+  padding: 7px 14px;
+  cursor: pointer;
+  border-radius: 1px;
+  letter-spacing: 0.03em;
+  transition: background 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hd-buy-btn:hover { background: var(--fire); }
+
+/* Footer note */
+.hd-footer {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.hd-footer-note {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.hd-updated {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hd-section, .hd-waiting { padding: 40px 24px 48px; }
+  .hd-grid { grid-template-columns: repeat(2, 1fr); }
+  .hd-title { font-size: 26px; }
+  .hd-header { flex-direction: column; gap: 16px; }
+  .hd-countdown-block { text-align: left; }
+  .hd-countdown { justify-content: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .hd-section, .hd-waiting { padding: 32px 16px 40px; }
+  .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 1px; }
+  .hd-title { font-size: 22px; }
+  .hd-cd-num { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ WAITING STATE (hiển thị khi chưa có data / hết giờ) ══ -->
+<div class="hd-waiting" id="hdWaiting">
+  <div class="hd-waiting-inner">
+    <div class="hd-waiting-dot"></div>
+    <div class="hd-waiting-dot"></div>
+    <div class="hd-waiting-dot"></div>
+    <div class="hd-waiting-dot"></div>
+    <p class="hd-waiting-eyebrow">Hot Deal tiếp theo</p>
+    <div class="hd-waiting-clock" id="waitClock">08:00</div>
+    <p class="hd-waiting-label">Quay lại lúc 8h sáng ngày mai để xem sản phẩm bán chạy nhất hôm nay</p>
+  </div>
+</div>
+
+<!-- ══ ACTIVE STATE (hiển thị khi có data) ══ -->
+<div class="hd-section" id="hdSection">
+  <div class="hd-header">
+    <div class="hd-title-block">
+      <div class="hd-badge">
+        <span class="hd-badge-dot"></span>
+        Đang bán chạy hôm nay
+      </div>
+      <h2 class="hd-title">Hàng <strong>Hot Deal</strong><br>đang bay nhanh</h2>
+    </div>
+    <div class="hd-countdown-block">
+      <p class="hd-countdown-label">Deal kết thúc sau</p>
+      <div class="hd-countdown">
+        <div class="hd-cd-unit">
+          <span class="hd-cd-num" id="cdH">00</span>
+          <span class="hd-cd-label">giờ</span>
+        </div>
+        <span class="hd-cd-sep">:</span>
+        <div class="hd-cd-unit">
+          <span class="hd-cd-num" id="cdM">00</span>
+          <span class="hd-cd-label">phút</span>
+        </div>
+        <span class="hd-cd-sep">:</span>
+        <div class="hd-cd-unit">
+          <span class="hd-cd-num" id="cdS">00</span>
+          <span class="hd-cd-label">giây</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hd-grid" id="hdGrid">
+    <!-- Cards được render bởi JS từ data bên dưới -->
+  </div>
+
+  <div class="hd-footer">
+    <p class="hd-footer-note">Chỉ hiển thị sản phẩm đã bán 50+ đơn trong ngày</p>
+    <p class="hd-updated" id="hdUpdated"></p>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA — Tool tự động thay thế phần này
+// Khi chạy tool thủ công, nó sẽ ghi đè
+// HOT_DEAL_DATA bên dưới bằng data thật
+// ══════════════════════════════════════════
+var HOT_DEAL_DATA = {
+  "updated": "2026-09-25T15:11:35",
+  "expires": "2026-09-25T23:59:59",
+  "products": [
+    {
+      "rank": 1,
+      "sku": "S120",
+      "name": "Set 5 quần chip mix màu - S120",
+      "price": "14.453.000đ",
+      "sold_today": 97,
+      "stock": 999,
+      "image": "https://content.pancake.vn/2-2609/2026/9/25/3f3f798bbd058e242b34e5393a072f2fe606750a.jpg",
+      "link": "https://naxuatdu.vn/san-pham/s120"
+    }
+  ]
+};
+
+// ══════════════════════════════════════════
+// LOGIC
+// ══════════════════════════════════════════
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function checkExpiry() {
+  var now = new Date();
+  var expires = new Date(HOT_DEAL_DATA.expires);
+  return now < expires;
+}
+
+function renderCards() {
+  var grid = document.getElementById('hdGrid');
+  grid.innerHTML = '';
+  HOT_DEAL_DATA.products.forEach(function(p) {
+    var pct = Math.min(Math.round((p.sold_today / p.stock) * 100), 100);
+    var card = document.createElement('div');
+    card.className = 'hd-card';
+    card.innerHTML =
+      '<div class="hd-rank' + (p.rank === 1 ? ' rank-1' : '') + '">' + p.rank + '</div>' +
+      '<div class="hd-img-wrap">' +
+        (p.image
+          ? '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy">'
+          : '<div class="hd-img-placeholder"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="2" fill="#ebebeb"/><path d="M12 28l7-9 5 6 3-4 5 7H12z" fill="#ccc"/><circle cx="27" cy="15" r="3" fill="#ccc"/></svg></div>') +
+      '</div>' +
+      '<div class="hd-sold-bar-wrap">' +
+        '<div class="hd-sold-meta">' +
+          '<span class="hd-sold-count">🔥 ' + p.sold_today + ' <span>đã bán hôm nay</span></span>' +
+          '<span class="hd-sold-pct">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="hd-bar"><div class="hd-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+      '<div class="hd-body">' +
+        '<p class="hd-name">' + p.name + '</p>' +
+        '<p class="hd-sku">' + p.sku + '</p>' +
+        '<div class="hd-price-row">' +
+          '<span class="hd-price">' + p.price + '</span>' +
+          '<a href="' + p.link + '" class="hd-buy-btn">Mua ngay</a>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+}
+
+function startCountdown() {
+  var expires = new Date(HOT_DEAL_DATA.expires);
+  function tick() {
+    var now = new Date();
+    var diff = expires - now;
+    if (diff <= 0) { location.reload(); return; }
+    var h = Math.floor(diff / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cdH').textContent = pad(h);
+    document.getElementById('cdM').textContent = pad(m);
+    document.getElementById('cdS').textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+function showWaiting() {
+  document.getElementById('hdWaiting').style.display = 'block';
+  document.getElementById('hdSection').style.display = 'none';
+  // Đếm ngược đến 8h sáng mai
+  function tickWait() {
+    var now = new Date();
+    var tomorrow8h = new Date(now);
+    tomorrow8h.setDate(tomorrow8h.getDate() + 1);
+    tomorrow8h.setHours(8, 0, 0, 0);
+    var diff = tomorrow8h - now;
+    var h = Math.floor(diff / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('waitClock').textContent = pad(h) + ':' + pad(m);
+  }
+  tickWait();
+  setInterval(tickWait, 60000);
+}
+
+function showActive() {
+  document.getElementById('hdWaiting').style.display = 'none';
+  document.getElementById('hdSection').style.display = 'block';
+  renderCards();
+  startCountdown();
+  var updated = new Date(HOT_DEAL_DATA.updated);
+  document.getElementById('hdUpdated').textContent =
+    'Cập nhật lúc ' + pad(updated.getHours()) + ':' + pad(updated.getMinutes());
+}
+
+// Khởi động
+if (HOT_DEAL_DATA.products.length > 0 && checkExpiry()) {
+  showActive();
+} else {
+  showWaiting();
+}
+</script>
+
+</body>
+</html>
