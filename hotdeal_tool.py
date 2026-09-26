@@ -372,7 +372,9 @@ def cap_nhat_html(san_pham, expired=False):
         })
 
     hot_deal_data = {
-        "updated":  now.strftime("%Y-%m-%dT%H:%M:%S"),
+        from datetime import timezone, timedelta
+        VN_TZ = timezone(timedelta(hours=7))
+        "updated": datetime.now(VN_TZ).strftime("%Y-%m-%dT%H:%M:%S"),
         "expires": today.strftime("%Y-%m-%d") + "T23:59:59+07:00",
         "products": products_list,
     }
