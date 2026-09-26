@@ -229,7 +229,8 @@ def lay_san_pham_ban_chay(cfg):
     print("\n📊 Đang kéo data từ Pancake...")
 
     slug_map = lay_slug_map_tu_webcake(cfg)  # ← thêm dòng này
-    today = date.today()
+    VN_TZ = timezone(timedelta(hours=7))
+    today = datetime.now(VN_TZ).date()
     since = today.strftime("%Y-%m-%d") + " 00:00:00"
     until = today.strftime("%Y-%m-%d") + " 23:59:59"
 
@@ -550,7 +551,8 @@ def main():
 
     print("=" * 54)
     print("  🔥 HOT DEAL TOOL — Na Xuất Dư")
-    print(f"  ⏰  {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+    VN_TZ = timezone(timedelta(hours=7))
+    print(f"  ⏰  {datetime.now(VN_TZ).strftime('%d/%m/%Y %H:%M:%S')}")
     print("=" * 54)
 
     # Kiểm tra thư viện
