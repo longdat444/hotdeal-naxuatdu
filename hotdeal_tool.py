@@ -226,7 +226,7 @@ def lay_info_tu_pancake(cfg, ds_sku):
         if not products:
             break
         for p in products:
-            sku_goc = (p.get("display_id") or "").strip()
+            sku_goc = str(p.get("custom_id") or p.get("code") or "").strip()
             if sku_goc not in ds_sku:
                 continue
             found.add(sku_goc)
@@ -235,8 +235,9 @@ def lay_info_tu_pancake(cfg, ds_sku):
             image = imgs[0].get("url", "") if imgs and isinstance(imgs[0], dict) else (imgs[0] if imgs else "")
             # Lấy giá từ variation đầu tiên
             price = 0
-            for v in (p.get("product_variations") or []):
-                price = v.get("retail_price") or v.get("price") or 0
+            for v in (p.get("product_variations") or p.get("variations") or []):
+                price = (v.get("retail_price") or v.get("price")
+                         or v.get("sale_price") or 0)
                 if price:
                     break
             result[sku_goc] = {"image": image, "price": price}
