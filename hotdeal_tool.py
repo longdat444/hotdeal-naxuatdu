@@ -373,7 +373,7 @@ def cap_nhat_html(san_pham, expired=False):
 
     hot_deal_data = {
         "updated":  now.strftime("%Y-%m-%dT%H:%M:%S"),
-        "expires":  today.strftime("%Y-%m-%d") + ("T00:00:00" if expired else "T23:59:59"),
+        "expires": today.strftime("%Y-%m-%d") + "T23:59:59+07:00",
         "products": products_list,
     }
 
