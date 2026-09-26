@@ -309,7 +309,7 @@ def lay_san_pham_ban_chay(cfg):
 
     print(f"  ✅ Tìm thấy {len(san_pham)} sản phẩm bán >= {nguong} đơn hôm nay")
     for i, sp in enumerate(san_pham, 1):
-        print(f"     #{i} {sp['name']} ({sp['sku']}) — {sp['sold_today']} đang đóng hàng")
+        print(f"     #{i} {sp['name']} ({sp['sku']}) — {sp['sold_today']} đang đóng hàng hôm nay")
 
     return san_pham
 
