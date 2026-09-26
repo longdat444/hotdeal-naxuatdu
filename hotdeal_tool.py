@@ -17,7 +17,9 @@ import requests
 import json
 import re
 import os
+import time
 from datetime import datetime, date, timezone, timedelta
+from collections import defaultdict
 # ══════════════════════════════════════════
 # API URLS
 # ══════════════════════════════════════════
@@ -222,94 +224,109 @@ def lay_slug_map_tu_webcake(cfg):
             break
         page += 1
 
+    info_map = {}
+    for sku, url in slug_map.items():
+        info_map[sku] = {"name": "", "price": 0, "image": ""}
     print(f"  ✅ Đã load {len(slug_map)} SP vào slug map")
-    return slug_map
+    return slug_map, info_map
 
 def lay_san_pham_ban_chay(cfg):
-    print("\n📊 Đang kéo data từ Pancake...")
+    print("\n📊 Đang kéo đơn hàng từ Pancake...")
 
-    slug_map = lay_slug_map_tu_webcake(cfg)  # ← thêm dòng này
-    VN_TZ = timezone(timedelta(hours=7))
-    today = datetime.now(VN_TZ).date()
-    since = today.strftime("%Y-%m-%d") + " 00:00:00"
-    until = today.strftime("%Y-%m-%d") + " 23:59:59"
+    slug_map, info_map = lay_slug_map_tu_webcake(cfg)
 
-    url = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/analytics/sale"
-    params = {
-        "api_key":      cfg["pancake_api_key"],
-        "since":        since,
-        "until":        until,
-        "split_by[]":   "Variation.product_id",
-        "success_status": 1,
-    }
+    VN_TZ    = timezone(timedelta(hours=7))
+    today_vn = datetime.now(VN_TZ).date()
+    start_ts = int(datetime(today_vn.year, today_vn.month, today_vn.day,
+                            0, 0, 0, tzinfo=VN_TZ).timestamp())
+    end_ts   = int(datetime(today_vn.year, today_vn.month, today_vn.day,
+                            23, 59, 59, tzinfo=VN_TZ).timestamp())
 
-    try:
-        r = requests.get(url, params=params, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-    except requests.exceptions.RequestException as e:
-        print(f"  ❌ Lỗi kết nối Pancake: {e}")
-        return []
-    except Exception as e:
-        print(f"  ❌ Lỗi đọc response: {e}")
-        return []
+    print(f"  Ngày      : {today_vn.strftime('%d/%m/%Y')}")
+    print(f"  Khung giờ : 00:00 → 23:59 (giờ VN)")
 
-    records = data.get("records", []) or data.get("data", []) or []
-    if not records:
-        print("  ⚠️  Không có dữ liệu từ Pancake hôm nay")
+    url  = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/orders"
+    page = 1
+    qty_map         = defaultdict(int)
+    pancake_img_map = {}
+    pancake_name_map = {}
+
+    while True:
+        params = {
+            "api_key":       cfg["pancake_api_key"],
+            "page_size":     100,
+            "page_number":   page,
+            "startDateTime": start_ts,
+            "endDateTime":   end_ts,
+            "option_sort":   "inserted_at_desc",
+        }
+        try:
+            r    = requests.get(url, params=params, timeout=40)
+            r.raise_for_status()
+            resp = r.json()
+        except Exception as e:
+            print(f"  ⚠️  Lỗi trang {page}: {e} — thử lại...")
+            time.sleep(2)
+            continue
+
+        data          = resp.get("data", [])
+        total_pages   = resp.get("total_pages", 1)
+        total_entries = resp.get("total_entries", "?")
+
+        print(f"  Trang {page}/{total_pages} — {(page-1)*100 + len(data)}/{total_entries} đơn", end="\r")
+
+        LOAI_BO = {4, 5, 6, 7}
+        for o in data:
+            if o.get("status") in LOAI_BO:
+                continue
+            for item in (o.get("items") or []):
+                vi  = item.get("variation_info") or {}
+                sku = (vi.get("product_display_id") or "").strip()
+                if not sku:
+                    continue
+                qty = int(item.get("quantity") or 1)
+                qty_map[sku] += qty
+                if sku not in pancake_img_map:
+                    imgs = vi.get("images") or []
+                    if imgs and isinstance(imgs[0], str):
+                        pancake_img_map[sku] = imgs[0]
+                if sku not in pancake_name_map:
+                    name = vi.get("name") or ""
+                    if name:
+                        pancake_name_map[sku] = name
+
+        if page >= total_pages or not data:
+            break
+        page += 1
+        time.sleep(0.3)
+
+    print(f"\n  ✅ Đã xử lý xong — tìm thấy {len(qty_map)} SKU\n")
+
+    so_hien_thi = cfg["so_sp_hien_thi"]
+    nguong      = cfg["so_luong_ban_toi_thieu"]
+    top_skus    = sorted(qty_map.items(), key=lambda x: x[1], reverse=True)
+    if nguong > 0:
+        top_skus = [(s, q) for s, q in top_skus if q >= nguong]
+    top_skus = top_skus[:so_hien_thi]
+
+    if not top_skus:
+        print("  ⚠️  Không có SP nào đủ ngưỡng hôm nay")
         return []
 
     san_pham = []
-    nguong   = cfg["so_luong_ban_toi_thieu"]
-
-    for rec in records:
-        product_info = rec.get("product", {})
-        success      = rec.get("success", {}) or {}
-        result       = rec.get("result",  {}) or {}
-
-        quantity = success.get("product_count") or result.get("product_count") or 0
-        quantity = float(quantity)
-
-        # Bỏ qua đơn âm (hoàn trả/đổi hàng) và đơn = 0
-        if quantity <= 0:
-            continue
-
-        if int(quantity) < nguong:
-            continue
-
-        sku        = product_info.get("custom_id", "")
-        images     = product_info.get("images", [])
-        total_rev  = success.get("price") or result.get("price") or 0
-
-        # FIX: price từ API là TỔNG doanh thu, chia cho qty để ra giá đơn vị
-        don_gia = round(float(total_rev) / quantity) if quantity else 0
-
-        # FIX: Pancake không trả slug → dùng display_id để xây URL fallback
-        # URL đúng lấy từ Webcake (tab cấu hình sản phẩm), không thể tự ghép từ SKU
-        display_id = product_info.get("display_id", "")
-        # Nếu bạn đã map sẵn SKU → slug đúng thì điền vào dict SLUG_MAP bên dưới
-        link = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}" if sku else "#")
-
+    for i, (sku, qty) in enumerate(top_skus, 1):
+        info = info_map.get(sku, {})
+        link = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}")
+        print(f"  #{i} {sku} — {qty} đã bán | {info.get('name', '') or pancake_name_map.get(sku, sku)}")
         san_pham.append({
-            "product_id":  rec.get("Variation.product_id", ""),
-            "name":        product_info.get("name", ""),
-            "sku":         sku,
-            "sold_today":  int(quantity),
-            "price":       don_gia,
-            "image":       images[0] if images else "",
-            "stock":       max(999, int(quantity)),
-            "link":        link,
+            "sku":        sku,
+            "name":       info.get("name", "") or pancake_name_map.get(sku, sku),
+            "sold_today": qty,
+            "price":      info.get("price", 0),
+            "image":      info.get("image", "") or pancake_img_map.get(sku, ""),
+            "stock":      999,
+            "link":       link,
         })
-
-    san_pham.sort(key=lambda x: x["sold_today"], reverse=True)
-    san_pham = san_pham[:cfg["so_sp_hien_thi"]]
-
-    # Giữ nguyên số đơn từ Analytics API (đã đúng theo ngày)
-    print("  ✅ Dùng số đơn từ Pancake Analytics")
-
-    print(f"  ✅ Tìm thấy {len(san_pham)} sản phẩm bán >= {nguong} đơn hôm nay")
-    for i, sp in enumerate(san_pham, 1):
-        print(f"     #{i} {sp['name']} ({sp['sku']}) — {sp['sold_today']} đang đóng hàng hôm nay")
 
     return san_pham
 
