@@ -247,9 +247,10 @@ def lay_san_pham_ban_chay(cfg):
 
     url  = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/orders"
     page = 1
-    qty_map         = defaultdict(int)
-    pancake_img_map = {}
-    pancake_name_map = {}
+    qty_map           = defaultdict(int)
+    pancake_img_map   = {}
+    pancake_name_map  = {}
+    pancake_price_map = {}
 
     while True:
         params = {
@@ -290,10 +291,11 @@ def lay_san_pham_ban_chay(cfg):
                     imgs = vi.get("images") or []
                     if imgs and isinstance(imgs[0], str):
                         pancake_img_map[sku] = imgs[0]
-                if sku not in pancake_name_map:
-                    name = vi.get("name") or ""
-                    if name:
-                        pancake_name_map[sku] = name
+                if sku not in pancake_price_map:
+                    price_raw = (item.get("price") or item.get("origin_price")
+                                 or vi.get("retail_price") or 0)
+                    if price_raw:
+                        pancake_price_map[sku] = int(float(price_raw))
 
         if page >= total_pages or not data:
             break
@@ -322,7 +324,7 @@ def lay_san_pham_ban_chay(cfg):
             "sku":        sku,
             "name":       info.get("name", "") or pancake_name_map.get(sku, sku),
             "sold_today": qty,
-            "price":      info.get("price", 0),
+            "price":      info.get("price", 0) or pancake_price_map.get(sku, 0),
             "image":      info.get("image", "") or pancake_img_map.get(sku, ""),
             "stock":      999,
             "link":       link,
