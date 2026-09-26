@@ -318,15 +318,17 @@ def lay_so_cho_van_chuyen(cfg, sku):
     if not sku:
         return 0
     try:
-        VN_TZ = timezone(timedelta(hours=7))
-        today = datetime.now(VN_TZ).date()
+        VN_TZ    = timezone(timedelta(hours=7))
+        today    = datetime.now(VN_TZ).date()
+        start_ts = int(datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=VN_TZ).timestamp())
+        end_ts   = int(datetime(today.year, today.month, today.day, 23, 59, 59, tzinfo=VN_TZ).timestamp())
         url    = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/orders"
         params = {
             "api_key":         cfg["pancake_api_key"],
             "search":          sku,
             "filter_status[]": 8,
-            "since":           today.strftime("%Y-%m-%d") + " 00:00:00",
-            "until":           today.strftime("%Y-%m-%d") + " 23:59:59",
+            "startDateTime":   start_ts,
+            "endDateTime":     end_ts,
             "page_size":       1,
         }
         r    = requests.get(url, params=params, timeout=15)
