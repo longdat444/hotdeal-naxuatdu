@@ -593,8 +593,8 @@ function showActive() {
     'Cập nhật lúc ' + pad(updated.getHours()) + ':' + pad(updated.getMinutes());
 }
 
-// Khởi động
-if (HOT_DEAL_DATA.products.length > 0 && checkExpiry()) {
+// Khởi động - luôn hiển thị active nếu có data
+if (HOT_DEAL_DATA.products.length > 0) {
   showActive();
 } else {
   showWaiting();
