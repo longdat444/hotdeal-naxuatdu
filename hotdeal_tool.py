@@ -172,9 +172,19 @@ def lay_slug_map_tu_webcake(cfg):
             sku   = p.get("custom_id", "")
             slug  = p.get("slug", "")
             name  = p.get("name", "")
-            price = p.get("price", 0) or p.get("sale_price", 0) or 0
-            imgs  = p.get("images", []) or []
-            image = imgs[0] if imgs else ""
+            price = p.get("price") or p.get("sale_price") or 0
+            if not price:
+                variants = p.get("variants") or p.get("product_variants") or []
+                for v in variants:
+                    vp = v.get("price") or v.get("sale_price") or 0
+                    if vp:
+                        price = vp
+                        break
+            imgs = p.get("images", []) or []
+            if imgs and isinstance(imgs[0], dict):
+                image = imgs[0].get("url") or imgs[0].get("src") or imgs[0].get("path") or ""
+            else:
+                image = imgs[0] if imgs else ""
             if sku and slug:
                 slug_map[sku]  = f"{WEBCAKE_DOMAIN}/products/{slug}"
                 info_map[sku]  = {"name": name, "price": price, "image": image}
@@ -207,7 +217,8 @@ def lay_san_pham_ban_chay(cfg):
 
     url  = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/orders"
     page = 1
-    qty_map = defaultdict(int)   # SKU → tổng QTY
+    qty_map = defaultdict(int)    # SKU → tổng QTY
+    pancake_img_map = {}          # SKU → ảnh từ Pancake (fallback)
 
     while True:
         params = {
@@ -243,6 +254,11 @@ def lay_san_pham_ban_chay(cfg):
                     continue
                 qty = int(item.get("quantity") or 1)
                 qty_map[sku] += qty
+                if sku not in pancake_img_map:
+                    img = (vi.get("image") or vi.get("product_image")
+                           or vi.get("thumbnail") or "")
+                    if img:
+                        pancake_img_map[sku] = img
 
         if page >= total_pages or not data:
             break
@@ -270,13 +286,13 @@ def lay_san_pham_ban_chay(cfg):
         link  = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}")
         print(f"  #{i} {sku} — {qty} đã bán | {info.get('name', sku)}")
         san_pham.append({
-            "sku":        sku,
-            "name":       info.get("name", sku),
+            "sku": sku,
+            "name": info.get("name", sku),
             "sold_today": qty,
-            "price":      info.get("price", 0),
-            "image":      info.get("image", ""),
-            "stock":      999,
-            "link":       link,
+            "price": info.get("price", 0),
+            "image": info.get("image", "") or pancake_img_map.get(sku, ""),
+            "stock": 999,
+            "link": link,
         })
 
     return san_pham
