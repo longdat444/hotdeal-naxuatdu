@@ -203,6 +203,50 @@ def lay_slug_map_tu_webcake(cfg):
 # BƯỚC 1: Kéo TẤT CẢ đơn hôm nay → đếm QTY từng SKU
 # Khung giờ: 0h00 → 23h59 hôm nay (giờ VN) — giống nút "Hôm nay" Pancake UI
 # ══════════════════════════════════════════
+def lay_info_tu_pancake(cfg, ds_sku):
+    """Lấy ảnh + giá từ Pancake API sản phẩm cho danh sách SKU."""
+    print("  🔄 Đang lấy ảnh/giá từ Pancake...")
+    result = {}  # SKU gốc (vd: A122) → {image, price}
+    url = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/products"
+    page = 1
+    found = set()
+    while len(found) < len(ds_sku):
+        try:
+            r = requests.get(url, params={
+                "api_key": cfg["pancake_api_key"],
+                "page_size": 50,
+                "page_number": page,
+            }, timeout=30)
+            r.raise_for_status()
+            data = r.json()
+        except Exception as e:
+            print(f"  ⚠️ Lỗi Pancake products trang {page}: {e}")
+            break
+        products = data.get("data", [])
+        if not products:
+            break
+        for p in products:
+            sku_goc = (p.get("display_id") or "").strip()
+            if sku_goc not in ds_sku:
+                continue
+            found.add(sku_goc)
+            # Lấy ảnh đầu tiên
+            imgs = p.get("images") or []
+            image = imgs[0].get("url", "") if imgs and isinstance(imgs[0], dict) else (imgs[0] if imgs else "")
+            # Lấy giá từ variation đầu tiên
+            price = 0
+            for v in (p.get("product_variations") or []):
+                price = v.get("retail_price") or v.get("price") or 0
+                if price:
+                    break
+            result[sku_goc] = {"image": image, "price": price}
+            print(f"    ✅ {sku_goc}: giá={price} | ảnh={'có' if image else 'không'}")
+        if page * 50 >= data.get("total_entries", 0):
+            break
+        page += 1
+        time.sleep(0.2)
+    return result
+
 def lay_san_pham_ban_chay(cfg):
     print("\n📊 Đang kéo đơn hàng từ Pancake...")
 
@@ -293,17 +337,22 @@ def lay_san_pham_ban_chay(cfg):
         print("  ⚠️  Không có SP nào đủ ngưỡng hôm nay")
         return []
 
+    # Lấy ảnh + giá từ Pancake cho top SKU
+    ds_sku_can_lay = {sku for sku, _ in top_skus}
+    pancake_info = lay_info_tu_pancake(cfg, ds_sku_can_lay)
+
     san_pham = []
     for i, (sku, qty) in enumerate(top_skus, 1):
-        info  = info_map.get(sku, {})
-        link  = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}")
+        info = info_map.get(sku, {})
+        pk = pancake_info.get(sku, {})
+        link = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}")
         print(f"  #{i} {sku} — {qty} đã bán | {info.get('name', sku)}")
         san_pham.append({
             "sku": sku,
             "name": info.get("name", sku),
             "sold_today": qty,
-            "price": info.get("price", 0) or pancake_price_map.get(sku, 0),
-            "image": info.get("image", "") or pancake_img_map.get(sku, ""),
+            "price": info.get("price", 0) or pk.get("price", 0),
+            "image": info.get("image", "") or pk.get("image", ""),
             "stock": 999,
             "link": link,
         })
