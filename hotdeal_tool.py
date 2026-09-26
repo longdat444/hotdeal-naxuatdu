@@ -168,11 +168,15 @@ def lay_slug_map_tu_webcake(cfg):
         products = data.get("products", [])
         if not products:
             break
+        if page == 1 and products:
+            print("\n🔍 DEBUG — field của sản phẩm đầu tiên từ Webcake:")
+            print(json.dumps(products[0], ensure_ascii=False, indent=2))
+            print("─" * 60)
         for p in products:
-            sku   = p.get("custom_id", "")
-            slug  = p.get("slug", "")
-            name  = p.get("name", "")
-            price = p.get("price") or p.get("sale_price") or 0
+            sku = p.get("custom_id", "")
+            slug = p.get("slug", "")
+            name = p.get("name", "")
+            price = p.get("price", 0) or p.get("sale_price", 0) or 0
             if not price:
                 variants = p.get("variants") or p.get("product_variants") or []
                 for v in variants:
