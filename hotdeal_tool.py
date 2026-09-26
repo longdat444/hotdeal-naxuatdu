@@ -318,17 +318,18 @@ def lay_san_pham_ban_chay(cfg):
 
 
 def lay_so_cho_van_chuyen(cfg, sku):
-    """Đếm đơn 'Đang đóng hàng' (status=8) của 1 sản phẩm qua Orders API
-    status=8 (packing) = tab 'Đang đóng hàng' trên Pancake UI
-    """
     if not sku:
         return 0
     try:
+        VN_TZ = timezone(timedelta(hours=7))
+        today = datetime.now(VN_TZ).date()
         url    = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/orders"
         params = {
             "api_key":         cfg["pancake_api_key"],
             "search":          sku,
-            "filter_status[]": 8,   # packing = Đang đóng hàng
+            "filter_status[]": 8,
+            "since":           today.strftime("%Y-%m-%d") + " 00:00:00",
+            "until":           today.strftime("%Y-%m-%d") + " 23:59:59",
             "page_size":       1,
         }
         r    = requests.get(url, params=params, timeout=15)
