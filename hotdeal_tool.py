@@ -296,7 +296,10 @@ def lay_san_pham_ban_chay(cfg):
                                  or vi.get("retail_price") or 0)
                     if price_raw:
                         pancake_price_map[sku] = int(float(price_raw))
-
+                if sku not in pancake_name_map:
+                    name = vi.get("name") or ""
+                    if name and name.strip().upper() != sku.upper():
+                        pancake_name_map[sku] = name
         if page >= total_pages or not data:
             break
         page += 1
@@ -322,7 +325,7 @@ def lay_san_pham_ban_chay(cfg):
         print(f"  #{i} {sku} — {qty} đã bán | {info.get('name', '') or pancake_name_map.get(sku, sku)}")
         san_pham.append({
             "sku":        sku,
-            "name":       info.get("name", "") or pancake_name_map.get(sku, sku),
+            "name":       pancake_name_map.get(sku, "") or info.get("name", "") or sku,
             "sold_today": qty,
             "price":      info.get("price", 0) or pancake_price_map.get(sku, 0),
             "image":      info.get("image", "") or pancake_img_map.get(sku, ""),
