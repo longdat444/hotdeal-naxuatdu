@@ -17,8 +17,7 @@ import requests
 import json
 import re
 import os
-from datetime import datetime, date
-
+from datetime import datetime, date, timezone, timedelta
 # ══════════════════════════════════════════
 # API URLS
 # ══════════════════════════════════════════
@@ -371,9 +370,8 @@ def cap_nhat_html(san_pham, expired=False):
             "link":       sp["link"],
         })
 
+    VN_TZ = timezone(timedelta(hours=7))
     hot_deal_data = {
-        from datetime import timezone, timedelta
-        VN_TZ = timezone(timedelta(hours=7))
         "updated": datetime.now(VN_TZ).strftime("%Y-%m-%dT%H:%M:%S"),
         "expires": today.strftime("%Y-%m-%d") + "T23:59:59+07:00",
         "products": products_list,
