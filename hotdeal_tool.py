@@ -304,11 +304,8 @@ def lay_san_pham_ban_chay(cfg):
     san_pham.sort(key=lambda x: x["sold_today"], reverse=True)
     san_pham = san_pham[:cfg["so_sp_hien_thi"]]
 
-    # Lấy số "Chờ vận chuyển" thật từ Products API
-    print("  🔄 Đang lấy số đang đóng hàng...")
-    for sp in san_pham:
-        waiting = lay_so_cho_van_chuyen(cfg, sp["sku"])
-        sp["sold_today"] = waiting  # Hiển thị số đang đóng hàng (packing)
+    # Giữ nguyên số đơn từ Analytics API (đã đúng theo ngày)
+    print("  ✅ Dùng số đơn từ Pancake Analytics")
 
     print(f"  ✅ Tìm thấy {len(san_pham)} sản phẩm bán >= {nguong} đơn hôm nay")
     for i, sp in enumerate(san_pham, 1):
