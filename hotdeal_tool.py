@@ -193,6 +193,7 @@ def lay_slug_map_tu_webcake(cfg):
             return {}
         headers = {"X-Storecake-Access-Token": new_token}
     slug_map = {}
+    info_map = {}
     page     = 1
 
     while True:
@@ -214,19 +215,47 @@ def lay_slug_map_tu_webcake(cfg):
             break
 
         for p in products:
-            sku  = p.get("custom_id", "")
-            slug = p.get("slug", "")
-            if sku and slug:
+            sku  = (p.get("custom_id") or "").strip()
+            slug = p.get("slug") or ""
+            if not sku:
+                continue
+
+            # Ảnh: ưu tiên variations, fallback về product.image
+            image = ""
+            for v in (p.get("variations") or []):
+                imgs = v.get("images") or []
+                if imgs:
+                    image = imgs[0]
+                    break
+            if not image and p.get("image"):
+                image = p["image"]
+
+            # Giá: lấy từ variation đầu tiên có retail_price > 0
+            price = 0
+            for v in (p.get("variations") or []):
+                rp = v.get("retail_price") or 0
+                if rp > 0:
+                    price = rp
+                    break
+
+            if slug:
                 slug_map[sku] = f"{WEBCAKE_DOMAIN}/products/{slug}"
+
+            # Lưu full info để check is_published sau
+            info_map[sku] = {
+                "name":         p.get("name") or sku,
+                "slug":         slug,
+                "price":        price,
+                "image":        image,
+                "is_published": bool(p.get("is_published", False)),
+                "is_removed":   bool(p.get("removed", False)),
+            }
 
         total = data.get("total_product", 0)
         if page * 50 >= total:
             break
         page += 1
 
-    info_map = {}
-    for sku, url in slug_map.items():
-        info_map[sku] = {"name": "", "price": 0, "image": ""}
     print(f"  ✅ Đã load {len(slug_map)} SP vào slug map")
     return slug_map, info_map
 
@@ -312,17 +341,37 @@ def lay_san_pham_ban_chay(cfg):
     top_skus    = sorted(qty_map.items(), key=lambda x: x[1], reverse=True)
     if nguong > 0:
         top_skus = [(s, q) for s, q in top_skus if q >= nguong]
-    top_skus = top_skus[:so_hien_thi]
 
     if not top_skus:
         print("  ⚠️  Không có SP nào đủ ngưỡng hôm nay")
         return []
 
-    san_pham = []
-    for i, (sku, qty) in enumerate(top_skus, 1):
+    san_pham  = []
+    bi_loai   = []
+    rank_hien = 1
+
+    for sku, qty in top_skus:
+        if len(san_pham) >= so_hien_thi:
+            break
+
         info = info_map.get(sku, {})
         link = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}")
-        print(f"  #{i} {sku} — {qty} đã bán | {info.get('name', '') or pancake_name_map.get(sku, sku)}")
+
+        # ── Kiểm tra hợp lệ (logic từ debug tool) ──
+        issues = []
+        if not info.get("is_published", True):   # True = bỏ qua check nếu không có field
+            issues.append("is_published=False")
+        if not (info.get("image") or pancake_img_map.get(sku)):
+            issues.append("Không có ảnh")
+        if not info.get("slug") and not slug_map.get(sku):
+            issues.append("Không có slug/URL")
+
+        if issues:
+            bi_loai.append((sku, qty, issues))
+            print(f"  ⚠️  Bỏ qua {sku} ({qty} đã bán) — {', '.join(issues)}")
+            continue
+
+        print(f"  #{rank_hien} {sku} — {qty} đã bán | {info.get('name', '') or pancake_name_map.get(sku, sku)}")
         san_pham.append({
             "sku":        sku,
             "name":       pancake_name_map.get(sku, "") or info.get("name", "") or sku,
@@ -332,6 +381,15 @@ def lay_san_pham_ban_chay(cfg):
             "stock":      999,
             "link":       link,
         })
+        rank_hien += 1
+
+    if bi_loai:
+        print(f"\n  ❌ Đã bỏ qua {len(bi_loai)} SP bị tắt đồng bộ:")
+        for sku, qty, issues in bi_loai:
+            print(f"     • {sku} ({qty} đã bán): {', '.join(issues)}")
+
+    if len(san_pham) < so_hien_thi:
+        print(f"\n  ⚠️  Chỉ đủ {len(san_pham)}/{so_hien_thi} SP hợp lệ")
 
     return san_pham
 
