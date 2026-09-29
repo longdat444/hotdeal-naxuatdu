@@ -155,6 +155,13 @@ if (SALE_DATA.products.length > 0 && now < exp) {
 } else {
   document.getElementById('saleWaiting').style.display = 'block';
 }
+
+function reportHeight() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ height: h }, '*');
+}
+reportHeight();
+setInterval(reportHeight, 500);
 </script>
 </body>
 </html>
