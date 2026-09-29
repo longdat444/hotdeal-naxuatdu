@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hàng Mới Về — Na Xuất Dư</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fff; --surface:#f7f7f7; --border:#ebebeb;
+  --text:#111; --muted:#888; --green:#389e0d; --green-light:#f6ffed; --green-mid:#b7eb8f;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  box-sizing:border-box;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);}
+
+.new-waiting{display:none;padding:48px 40px;max-width:900px;margin:0 auto;text-align:center;}
+.new-waiting-inner{border:1.5px dashed var(--border);padding:40px 32px;color:var(--muted);font-size:13px;font-weight:300;}
+
+.new-section{display:none;padding:16px 0 32px;max-width:100%;margin:0;}
+.new-header{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);padding-left:16px;}
+.new-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);border:1px solid var(--green-mid);color:var(--green);font-size:11px;font-weight:600;letter-spacing:.06em;padding:4px 10px;border-radius:2px;margin-bottom:10px;}
+.new-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.new-title{font-size:32px;font-weight:300;letter-spacing:-.5px;line-height:1.1;}
+.new-title strong{font-weight:600;}
+.new-date{font-size:13px;color:var(--muted);font-weight:300;margin-top:6px;}
+
+.new-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--bg);border:none;}
+.new-card{background:var(--bg);transition:background .15s;}
+.new-card:hover{background:#fafafa;}
+.new-img{aspect-ratio:3/4;background:var(--surface);overflow:hidden;position:relative;}
+.new-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.new-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.new-tag{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.06em;}
+.new-body{padding:14px 16px 16px;}
+.new-name{font-size:13px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.new-sku{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:10px;}
+.new-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.new-price{font-size:16px;font-weight:600;}
+.new-btn{font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:#fff;background:var(--text);border:none;padding:7px 14px;cursor:pointer;border-radius:1px;letter-spacing:.03em;text-decoration:none;display:inline-block;white-space:nowrap;transition:background .15s;}
+.new-btn:hover{background:var(--green);}
+.new-footer{margin-top:16px;padding:12px 16px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;}
+.new-note,.new-updated{font-size:11px;color:var(--muted);font-weight:300;}
+
+@media(max-width:900px){.new-section,.new-waiting{padding:16px 0 32px;}.new-grid{grid-template-columns:repeat(2,1fr);}.new-title{font-size:26px;}}
+@media(max-width:480px){.new-section,.new-waiting{padding:12px 0 24px;}.new-grid{grid-template-columns:repeat(2,1fr);gap:8px;}.new-title{font-size:22px;}}
+</style>
+</head>
+<body>
+
+<div class="new-waiting" id="newWaiting">
+  <div class="new-waiting-inner">
+    <p>✨ Chưa có hàng mới hôm nay — Quay lại ngày mai nhé!</p>
+  </div>
+</div>
+
+<div class="new-section" id="newSection">
+  <div class="new-header">
+    <div class="new-badge"><span class="new-badge-dot"></span>Mới về hôm nay</div>
+    <h2 class="new-title">✨ Hàng <strong>Mới Về</strong></h2>
+    <p class="new-date" id="newDate"></p>
+  </div>
+  <div class="new-grid" id="newGrid"></div>
+  <div class="new-footer">
+    <p class="new-note">Mẫu mới về liên tục mỗi ngày</p>
+    <p class="new-updated" id="newUpdated"></p>
+  </div>
+</div>
+
+<script>
+var NEW_DATA = {
+  "updated": "2026-09-28T13:54:59",
+  "expires": "2026-09-28T23:59:59",
+  "products": [
+    {
+      "rank": 1,
+      "sku": "S121",
+      "name": "Set bộ kids - S121",
+      "price": "199.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/2-2609/2026/9/27/7f275e8359edb9d72cbfde8868809859273c6642.jpg",
+      "link": "https://www.naxuatdu.vn/products/set-bo-kids-s121"
+    },
+    {
+      "rank": 2,
+      "sku": "A496",
+      "name": "Áo khoác - A496",
+      "price": "209.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/web-media-263/9c/89/26/56/f43e7e71c921d3b059859541a45fb3b8efcdd7bf2a268a97eb01b7bd-w:1402-h:1122-l:1311864-t:image/png.png",
+      "link": "https://www.naxuatdu.vn/products/ao-khoac-a496"
+    },
+    {
+      "rank": 3,
+      "sku": "Q322",
+      "name": "Quần suông - Q322",
+      "price": "189.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/2-2609/2026/9/28/0301fbb516b594e168778da6784e454a703b4464.jpg",
+      "link": "https://www.naxuatdu.vn/products/quan-suong-q322"
+    },
+    {
+      "rank": 4,
+      "sku": "A499",
+      "name": "Áo tay dài - A499",
+      "price": "139.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/2-2609/2026/9/28/43500ad1c6987de8d75f7804cf8debe4ee13b53c.jpg",
+      "link": "https://www.naxuatdu.vn/products/ao-tay-dai-a499"
+    }
+  ]
+};
+
+function renderNew() {
+  var grid = document.getElementById('newGrid');
+  NEW_DATA.products.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'new-card';
+    card.innerHTML =
+      '<div class="new-img">' +
+        '<span class="new-tag">MỚI</span>' +
+        (p.image ? '<img src="'+p.image+'" alt="'+p.name+'" loading="lazy">'
+          : '<div class="new-img-ph"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="2" fill="#ebebeb"/><path d="M12 28l7-9 5 6 3-4 5 7H12z" fill="#ccc"/><circle cx="27" cy="15" r="3" fill="#ccc"/></svg></div>') +
+      '</div>' +
+      '<div class="new-body">' +
+        '<p class="new-name">'+p.name+'</p>' +
+        '<p class="new-sku">'+p.sku+'</p>' +
+        '<div class="new-row">' +
+          '<span class="new-price">'+p.price+'</span>' +
+          '<a href="'+p.link+'" class="new-btn">Xem ngay</a>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+
+  var u = new Date(NEW_DATA.updated);
+  var days = ['CN','T2','T3','T4','T5','T6','T7'];
+  document.getElementById('newDate').textContent =
+    days[u.getDay()] + ', ngày ' + u.getDate() + '/' + (u.getMonth()+1) + '/' + u.getFullYear();
+  document.getElementById('newUpdated').textContent =
+    'Cập nhật ' + u.getHours() + ':' + String(u.getMinutes()).padStart(2,'0');
+}
+
+var now = new Date();
+var exp = new Date(NEW_DATA.expires);
+if (NEW_DATA.products.length > 0 && now < exp) {
+  document.getElementById('newSection').style.display = 'block';
+  renderNew();
+} else {
+  document.getElementById('newWaiting').style.display = 'block';
+}
+</script>
+</body>
+</html>

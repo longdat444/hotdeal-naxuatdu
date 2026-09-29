@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Xả Kho — Na Xuất Dư</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fff; --surface:#f7f7f7; --border:#ebebeb;
+  --text:#111; --muted:#888;
+  --accent:#d4380d; --accent-light:#fff2e8; --accent-mid:#ffd8bf;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  box-sizing:border-box;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);}
+
+.sale-waiting{display:none;padding:48px 40px;max-width:900px;margin:0 auto;text-align:center;}
+.sale-waiting-inner{border:1.5px solid var(--border);padding:40px 32px;color:var(--muted);font-size:13px;font-weight:300;}
+
+.sale-section{display:none;padding:16px 0 32px;max-width:100%;margin:0;}
+
+.sale-header{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);padding-left:16px;}
+.sale-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-light);border:1px solid var(--accent-mid);color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.06em;padding:4px 10px;border-radius:2px;margin-bottom:10px;}
+.sale-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.sale-title{font-size:32px;font-weight:300;letter-spacing:-.5px;line-height:1.1;}
+.sale-title strong{font-weight:600;}
+.sale-sub{font-size:13px;color:var(--muted);font-weight:300;margin-top:6px;}
+
+.sale-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--bg);border:none;align-items:stretch;}
+.sale-card{background:var(--bg);transition:background .15s;border:1px solid var(--border);margin:-1px 0 0 -1px;display:flex;flex-direction:column;height:100%;}
+.sale-card:hover{background:#fafafa;}
+.sale-img{aspect-ratio:3/4;background:var(--surface);overflow:hidden;position:relative;}
+.sale-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.sale-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.sale-tag{position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.06em;}
+.sale-body{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+.sale-name{font-size:13px;font-weight:500;margin-bottom:3px;line-height:1.4;min-height:2.8em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.sale-sku{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:10px;}
+.sale-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.sale-price{font-size:16px;font-weight:600;color:var(--accent);}
+.sale-btn{font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:7px 14px;cursor:pointer;border-radius:1px;letter-spacing:.03em;transition:opacity .15s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.sale-btn:hover{opacity:.85;}
+.sale-footer{margin-top:16px;padding:12px 16px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.sale-note,.sale-updated{font-size:11px;color:var(--muted);font-weight:300;}
+
+@media(max-width:900px){.sale-section,.sale-waiting{padding:16px 0 32px;}.sale-grid{grid-template-columns:repeat(2,1fr);}.sale-title{font-size:26px;}}
+@media(max-width:480px){.sale-section,.sale-waiting{padding:12px 0 24px;}.sale-grid{grid-template-columns:repeat(2,1fr);gap:8px;}.sale-title{font-size:22px;}}
+</style>
+</head>
+<body>
+
+<div class="sale-waiting" id="saleWaiting">
+  <div class="sale-waiting-inner">
+    <p>Hiện chưa có sản phẩm SALE — Quay lại sau nhé!</p>
+  </div>
+</div>
+
+<div class="sale-section" id="saleSection">
+  <div class="sale-header">
+    <div class="sale-badge"><span class="sale-badge-dot"></span>Đang xả kho</div>
+    <h2 class="sale-title">🏷️ Xả Kho — <strong>Giá Cực Sốc</strong></h2>
+    <p class="sale-sub">Hàng VNXK authentic, giảm thật — số lượng có hạn!</p>
+  </div>
+  <div class="sale-grid" id="saleGrid"></div>
+  <div class="sale-footer">
+    <p class="sale-note">Hàng sale không áp dụng đổi trả</p>
+    <p class="sale-updated" id="saleUpdated"></p>
+  </div>
+</div>
+
+<script>
+var SALE_DATA = {
+  "updated": "2026-09-28T13:54:59",
+  "expires": "2026-09-28T23:59:59",
+  "products": [
+    {
+      "rank": 1,
+      "sku": "D105",
+      "name": "Đầm midi - D105 (SALE)",
+      "price": "299.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/web-media-263/14/95/02/a5/529fb21da7b64d9b8e8b4217121c2469151e084dbcf568154f814303-w:1024-h:1536-l:59280-t:image/jpeg.jpeg",
+      "link": "https://www.naxuatdu.vn/products/dam-midi-d105-sale"
+    },
+    {
+      "rank": 2,
+      "sku": "A441",
+      "name": "Áo đũi - A441 (SALE)",
+      "price": "70.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/web-media-263/1f/13/d5/45/fd5aa06d9e7fcb80435bf9db50453258e225246bc153f6435ec12898-w:2048-h:2456-l:743492-t:image/jpeg.jpeg",
+      "link": "https://www.naxuatdu.vn/products/ao-dui-a441-sale"
+    },
+    {
+      "rank": 3,
+      "sku": "A350",
+      "name": "Áo tanktop nam màu đen - A350 (SALE)",
+      "price": "95.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/web-media-263/86/af/5f/17/4d75e0eb315dda2100b01158ed40c44274d5f2e5332e49a9fefd7a9e-w:1731-h:2048-l:312687-t:image/jpeg.jpeg",
+      "link": "https://www.naxuatdu.vn/products/ao-tanktop-nam-mau-den-a350-sale"
+    },
+    {
+      "rank": 4,
+      "sku": "A434",
+      "name": "Set 2 áo len cổ cao mix màu - A434 (SALE)",
+      "price": "135.000đ",
+      "sold_today": 0,
+      "stock": 999,
+      "image": "https://content.pancake.vn/web-media-263/18/ea/05/b2/2b6aa7d933d38832280759ee5ca0ff956205f837c8c417bd8cb943b2-w:1436-h:1914-l:318161-t:image/jpeg.jpeg",
+      "link": "https://www.naxuatdu.vn/products/set-2-ao-len-co-cao-mix-mau-a434-sale"
+    }
+  ]
+};
+
+function renderSale() {
+  var grid = document.getElementById('saleGrid');
+  SALE_DATA.products.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'sale-card';
+    card.innerHTML =
+      '<div class="sale-img">' +
+        '<span class="sale-tag">SALE</span>' +
+        (p.image ? '<img src="'+p.image+'" alt="'+p.name+'" loading="lazy">'
+          : '<div class="sale-img-ph"><svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="2" fill="#ebebeb"/><path d="M12 28l7-9 5 6 3-4 5 7H12z" fill="#ccc"/><circle cx="27" cy="15" r="3" fill="#ccc"/></svg></div>') +
+      '</div>' +
+      '<div class="sale-body">' +
+        '<p class="sale-name">'+p.name+'</p>' +
+        '<p class="sale-sku">'+p.sku+'</p>' +
+        '<div class="sale-row">' +
+          '<span class="sale-price">'+p.price+'</span>' +
+          '<a href="'+p.link+'" class="sale-btn">Mua ngay</a>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+  var u = new Date(SALE_DATA.updated);
+  document.getElementById('saleUpdated').textContent = 'Cập nhật ' + u.getHours() + ':' + String(u.getMinutes()).padStart(2,'0');
+}
+
+var now = new Date();
+var exp = new Date(SALE_DATA.expires);
+if (SALE_DATA.products.length > 0 && now < exp) {
+  document.getElementById('saleSection').style.display = 'block';
+  renderSale();
+} else {
+  document.getElementById('saleWaiting').style.display = 'block';
+}
+</script>
+</body>
+</html>
