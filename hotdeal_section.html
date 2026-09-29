@@ -261,7 +261,7 @@ body {
 
 /* Sold bar */
 .hd-sold-bar-wrap {
-  padding: 14px 16px 0;
+  padding: 12px 12px 0;
 }
 
 .hd-sold-meta {
@@ -304,7 +304,7 @@ body {
 
 /* Card body */
 .hd-body {
-  padding: 12px 16px 16px;
+  padding: 10px 12px 12px;
 }
 
 .hd-name {
@@ -333,9 +333,10 @@ body {
 }
 
 .hd-price {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .hd-buy-btn {
@@ -345,7 +346,7 @@ body {
   color: #fff;
   background: var(--text);
   border: none;
-  padding: 7px 14px;
+  padding: 7px 12px;
   cursor: pointer;
   border-radius: 1px;
   letter-spacing: 0.03em;
@@ -353,6 +354,7 @@ body {
   white-space: nowrap;
   text-decoration: none;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .hd-buy-btn:hover { background: var(--fire); }
@@ -380,42 +382,62 @@ body {
   font-weight: 300;
 }
 
-/* Responsive — 6 breakpoint Webcake */
+/* ── Responsive — 6 breakpoint Webcake ── */
 
-/* 1024–1439px: 4 cột */
+/* 1024–1439px: 4 cột (iPad Pro 13: 1024px, Surface Pro 10: 912px) */
 @media (max-width: 1439px) {
   .hd-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* 768–1023px: 3 cột */
+/* 768–1023px: 3 cột (iPad Mini: 744px) */
 @media (max-width: 1023px) {
   .hd-grid { grid-template-columns: repeat(3, 1fr); }
   .hd-title { font-size: 28px; }
 }
 
-/* 425–767px: 2 cột */
+/* 425–767px: 2 cột — iPhone 16 Pro Max 440px, Pixel 9/10/A55 412px */
 @media (max-width: 767px) {
-  .hd-section, .hd-waiting { padding: 16px 0 32px; }
-  .hd-grid { grid-template-columns: repeat(2, 1fr); }
-  .hd-title { font-size: 26px; }
-  .hd-header { flex-direction: column; gap: 16px; }
+  .hd-section, .hd-waiting { padding: 16px 0 28px; }
+  .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .hd-header { flex-direction: column; gap: 12px; padding: 0 12px; }
+  .hd-title { font-size: 24px; }
   .hd-countdown-block { text-align: left; }
   .hd-countdown { justify-content: flex-start; }
+  .hd-sold-bar-wrap { padding: 10px 10px 0; }
+  .hd-body { padding: 10px 10px 12px; }
 }
 
-/* 375–424px: 2 cột */
+/* 375–424px: 2 cột — iPhone SE 375px, iPhone 16 393px */
 @media (max-width: 424px) {
   .hd-section, .hd-waiting { padding: 12px 0 24px; }
   .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .hd-header { padding: 0 10px; }
   .hd-title { font-size: 22px; }
   .hd-cd-num { font-size: 22px; }
+  .hd-sold-bar-wrap { padding: 8px 8px 0; }
+  .hd-body { padding: 8px 8px 10px; }
+  .hd-name { font-size: 12px; }
+  .hd-price { font-size: 14px; }
+  .hd-buy-btn { padding: 6px 10px; font-size: 10px; }
+  .hd-rank { width: 20px; height: 20px; font-size: 10px; top: 8px; left: 8px; }
+  .hd-rank.rank-1 { width: 24px; height: 24px; font-size: 11px; }
 }
 
-/* 320–374px: 2 cột */
+/* 320–374px: 2 cột — Samsung A55 360px, Galaxy Z Fold gập 402px → 320px */
 @media (max-width: 374px) {
   .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
-  .hd-title { font-size: 20px; }
-  .hd-buy-btn { padding: 6px 10px; font-size: 10px; }
+  .hd-header { padding: 0 8px; }
+  .hd-title { font-size: 19px; }
+  .hd-cd-num { font-size: 20px; }
+  .hd-sold-bar-wrap { padding: 7px 7px 0; }
+  .hd-sold-count { font-size: 11px; }
+  .hd-body { padding: 7px 7px 9px; }
+  .hd-name { font-size: 11px; }
+  .hd-sku { font-size: 10px; margin-bottom: 6px; }
+  .hd-price { font-size: 13px; }
+  .hd-buy-btn { padding: 5px 8px; font-size: 10px; }
+  .hd-rank { width: 18px; height: 18px; font-size: 9px; top: 6px; left: 6px; }
+  .hd-rank.rank-1 { width: 22px; height: 22px; font-size: 10px; }
 }
 </style>
 </head>
@@ -480,7 +502,7 @@ body {
 // HOT_DEAL_DATA bên dưới bằng data thật
 // ══════════════════════════════════════════
 var HOT_DEAL_DATA = {
-  "updated": "2026-09-29T16:12:03",
+  "updated": "2026-09-29T15:47:00",
   "expires": "2026-09-29T23:59:59",
   "products": [
     {
@@ -498,7 +520,7 @@ var HOT_DEAL_DATA = {
       "sku": "A525",
       "name": "Áo tay dài - A525",
       "price": "125.000đ",
-      "sold_today": 73,
+      "sold_today": 72,
       "stock": 999,
       "image": "https://content.pancake.vn/web-media-263/d2/59/f8/6c/8135b0f0941967c18a8cfc92361ef16cea16f91ade63d095d2e5fb21-w:1969-h:2626-l:319749-t:image/jpeg.jpeg",
       "link": "https://www.naxuatdu.vn/products/ao-tay-dai-a525"
@@ -518,7 +540,7 @@ var HOT_DEAL_DATA = {
       "sku": "Q324",
       "name": "Quần suông - Q324",
       "price": "175.000đ",
-      "sold_today": 31,
+      "sold_today": 30,
       "stock": 999,
       "image": "https://content.pancake.vn/web-media-263/ca/69/b4/dd/613b1c2f3f3b1a331e72ad7453db98ffaf61e4a5d2cf45a232a65fff-w:1920-h:2561-l:431996-t:image/jpeg.jpeg",
       "link": "https://www.naxuatdu.vn/products/quan-suong-q324"

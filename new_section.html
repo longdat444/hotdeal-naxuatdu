@@ -35,32 +35,63 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 .new-img img{width:100%;height:100%;object-fit:cover;display:block;}
 .new-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
 .new-tag{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.06em;}
-.new-body{padding:14px 16px 16px;}
+.new-body{padding:10px 12px 12px;}
 .new-name{font-size:13px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.new-sku{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:10px;}
-.new-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.new-price{font-size:16px;font-weight:600;}
-.new-btn{font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:#fff;background:var(--text);border:none;padding:7px 14px;cursor:pointer;border-radius:1px;letter-spacing:.03em;text-decoration:none;display:inline-block;white-space:nowrap;transition:background .15s;}
+.new-sku{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:8px;}
+.new-row{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.new-price{font-size:15px;font-weight:600;white-space:nowrap;}
+.new-btn{font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:#fff;background:var(--text);border:none;padding:7px 12px;cursor:pointer;border-radius:1px;letter-spacing:.03em;text-decoration:none;display:inline-block;white-space:nowrap;transition:background .15s;flex-shrink:0;}
 .new-btn:hover{background:var(--green);}
 .new-footer{margin-top:16px;padding:12px 16px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;}
 .new-note,.new-updated{font-size:11px;color:var(--muted);font-weight:300;}
 
-/* Responsive — 6 breakpoint Webcake */
+/* ── Responsive — 6 breakpoint Webcake ── */
 
-/* 1024–1439px: 4 cột */
-@media(max-width:1439px){.new-grid{grid-template-columns:repeat(4,1fr);}}
+/* 1024–1439px: 4 cột (iPad Pro 13: 1024px, Surface Pro 10: 912px) */
+@media(max-width:1439px){
+  .new-grid{grid-template-columns:repeat(4,1fr);}
+}
 
-/* 768–1023px: 3 cột */
-@media(max-width:1023px){.new-grid{grid-template-columns:repeat(3,1fr);}.new-title{font-size:28px;}}
+/* 768–1023px: 3 cột (iPad Mini: 744px → dùng max 767 để bắt cả 744) */
+@media(max-width:1023px){
+  .new-grid{grid-template-columns:repeat(3,1fr);}
+  .new-title{font-size:28px;}
+}
 
-/* 425–767px: 2 cột */
-@media(max-width:767px){.new-section,.new-waiting{padding:16px 0 32px;}.new-grid{grid-template-columns:repeat(2,1fr);}.new-title{font-size:26px;}}
+/* 425–767px: 2 cột — iPhone 16 Pro Max 440px, Pixel 9/10/A55 412px */
+@media(max-width:767px){
+  .new-section,.new-waiting{padding:16px 0 28px;}
+  .new-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .new-header{padding-left:12px;}
+  .new-title{font-size:24px;}
+  .new-body{padding:10px 10px 12px;}
+}
 
-/* 375–424px: 2 cột */
-@media(max-width:424px){.new-section,.new-waiting{padding:12px 0 24px;}.new-grid{grid-template-columns:repeat(2,1fr);gap:6px;}.new-title{font-size:22px;}}
+/* 375–424px: 2 cột — iPhone SE 375px, iPhone 16 393px */
+@media(max-width:424px){
+  .new-section,.new-waiting{padding:12px 0 24px;}
+  .new-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .new-header{padding-left:10px;}
+  .new-title{font-size:22px;}
+  .new-body{padding:8px 8px 10px;}
+  .new-name{font-size:12px;}
+  .new-price{font-size:14px;}
+  .new-btn{padding:6px 10px;font-size:10px;}
+  .new-tag{top:8px;left:8px;font-size:9px;padding:2px 6px;}
+}
 
-/* 320–374px: 2 cột */
-@media(max-width:374px){.new-grid{grid-template-columns:repeat(2,1fr);gap:4px;}.new-title{font-size:20px;}.new-btn{padding:6px 10px;font-size:10px;}}
+/* 320–374px: 2 cột — Samsung A55 360px, Galaxy Z Fold 402px (gập) → 320px */
+@media(max-width:374px){
+  .new-grid{grid-template-columns:repeat(2,1fr);gap:4px;}
+  .new-header{padding-left:8px;}
+  .new-title{font-size:19px;}
+  .new-body{padding:7px 7px 9px;}
+  .new-name{font-size:11px;}
+  .new-sku{font-size:10px;margin-bottom:6px;}
+  .new-price{font-size:13px;}
+  .new-btn{padding:5px 8px;font-size:10px;}
+  .new-tag{top:6px;left:6px;font-size:9px;padding:2px 5px;}
+}
 </style>
 </head>
 <body>
@@ -86,7 +117,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 
 <script>
 var NEW_DATA = {
-  "updated": "2026-09-29T16:12:03",
+  "updated": "2026-09-29T15:47:00",
   "expires": "2026-09-29T23:59:59",
   "products": [
     {
