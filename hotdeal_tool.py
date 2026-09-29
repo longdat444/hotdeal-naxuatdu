@@ -47,7 +47,7 @@ DEFAULT_CONFIG = {
     "webcake_api_key":        "",
     "webcake_refresh_token":  "",
     "so_luong_ban_toi_thieu": 50,
-    "so_sp_hien_thi":         8,
+    "so_sp_hien_thi":         4,
     "github_token":           "",
     "github_username":        "longdat444",
     "github_repo":            "hotdeal-naxuatdu",
