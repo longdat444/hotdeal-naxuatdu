@@ -699,7 +699,7 @@ def main():
     cap_nhat_html_file(HTML_FILES["new"],     "new",     new_list)
 
     # ── Push GitHub ──
-    push_all_github(cfg)  # Bỏ comment khi cần push
+    push_all_github(cfg)
 
     # ── Tóm tắt ──
     print("\n" + "=" * 56)
