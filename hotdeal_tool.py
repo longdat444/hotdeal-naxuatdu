@@ -351,14 +351,14 @@ def lay_hang_moi_tu_pancake(cfg, slug_map):
     url     = f"{PANCAKE_BASE}/shops/{cfg['pancake_shop_id']}/products/variations"
     so_hien = cfg["so_sp_hien_thi"]
 
-    def keo_variations(extra_params, max_pages=None, label=""):
+    def keo_variations(extra_params, max_pages=None, label="", page_size=50):
         """Kéo variations theo params, trả về list variation raw."""
         page = 1
         result = []
         while True:
             params = {
                 "api_key":     cfg["pancake_api_key"],
-                "page_size":   50,
+                "page_size":   page_size,
                 "page_number": page,
                 **extra_params,
             }
@@ -426,7 +426,7 @@ def lay_hang_moi_tu_pancake(cfg, slug_map):
         # Lấy SP trước hôm nay (không truyền startDate/endDate)
         # API trả về theo inserted_at giảm dần nên lấy trang đầu là đủ
         print(f"  🔄 Bước 2: Cần bổ sung {can_them} SP — kéo SP gần nhất từ trước hôm nay...")
-        raw_all = keo_variations({}, max_pages=max(10, so_hien * 3), label="  [Bổ sung]")
+        raw_all = keo_variations({}, max_pages=max(5, so_hien), label="  [Bổ sung]", page_size=100)
         # Sort theo product_id mới nhất (dùng inserted_at từ product nếu có, fallback product_id)
         candidates = []
         for v in raw_all:
