@@ -565,8 +565,9 @@ def loc_hang_moi(slug_map, info_map, cfg):
 
 def cap_nhat_html_file(file_name, section_key, san_pham, expired=False):
     """Ghi data mới vào file HTML tương ứng"""
-    now   = datetime.now()
-    today = date.today()
+    VN_TZ = timezone(timedelta(hours=7))
+    now   = datetime.now(VN_TZ)
+    today = now.date()
 
     products_list = []
     for i, sp in enumerate(san_pham, 1):
