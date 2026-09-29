@@ -48,6 +48,7 @@ DEFAULT_CONFIG = {
     "webcake_refresh_token":  "",
     "so_luong_ban_toi_thieu": 50,
     "so_sp_hien_thi":         4,
+    "so_sp_hang_moi":         8,
     "github_token":           "",
     "github_username":        "longdat444",
     "github_repo":            "hotdeal-naxuatdu",
@@ -84,11 +85,12 @@ def kiem_tra_config(cfg):
         "webcake_refresh_token":  "WEBCAKE_REFRESH_TOKEN",
         "github_token":           "GH_TOKEN_PAT",
         "so_luong_ban_toi_thieu": "SO_LUONG_BAN_TOI_THIEU",
+        "so_sp_hang_moi":         "SO_SP_HANG_MOI",
     }
     for cfg_key, env_key in env_map.items():
         val = os.environ.get(env_key, "")
         if val:
-            if cfg_key == "so_luong_ban_toi_thieu":
+            if cfg_key in ("so_luong_ban_toi_thieu", "so_sp_hang_moi"):
                 cfg[cfg_key] = int(val) if val.isdigit() else cfg[cfg_key]
             else:
                 cfg[cfg_key] = val
@@ -714,7 +716,9 @@ def main():
     print("\n🔍 Bước 3/3 — Lọc sản phẩm...")
     hot_deal  = loc_hot_deal(qty_map, slug_map, info_map, cfg)
     sale_list = loc_sale(slug_map, info_map, cfg)
-    new_list  = lay_hang_moi_tu_pancake(cfg, slug_map)
+    cfg_new       = dict(cfg)
+    cfg_new["so_sp_hien_thi"] = cfg.get("so_sp_hang_moi", 8)
+    new_list  = lay_hang_moi_tu_pancake(cfg_new, slug_map)
 
     # ── Cập nhật HTML ──
     print("\n📝 Đang cập nhật HTML...")
