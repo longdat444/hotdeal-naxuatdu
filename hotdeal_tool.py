@@ -82,7 +82,7 @@ def kiem_tra_config(cfg):
         "pancake_shop_id":        "PANCAKE_SHOP_ID",
         "webcake_api_key":        "WEBCAKE_API_KEY",
         "webcake_refresh_token":  "WEBCAKE_REFRESH_TOKEN",
-        "github_token":           "GH_TOKEN_PAT",
+        "github_token":           "GITHUB_TOKEN_PAT",
         "so_luong_ban_toi_thieu": "SO_LUONG_BAN_TOI_THIEU",
     }
     for cfg_key, env_key in env_map.items():
@@ -731,9 +731,10 @@ def main():
     print(f"     🏷️  Xả Kho   : {len(sale_list)} sản phẩm")
     print(f"     ✨ Hàng Mới  : {len(new_list)} sản phẩm")
     print("=" * 56)
-    print("  ✅ Xong! Bấm Enter để đóng...")
+    print("  ✅ Xong!")
     print("=" * 56)
-    input()
+    if sys.stdin.isatty():
+        input("\n  Bấm Enter để đóng...")
 
 
 if __name__ == "__main__":
