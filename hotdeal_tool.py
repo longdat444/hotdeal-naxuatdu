@@ -21,6 +21,7 @@ import requests
 import json
 import re
 import os
+import sys
 import time
 import subprocess
 from datetime import datetime, date, timezone, timedelta
@@ -75,9 +76,31 @@ def nhap(prompt, mac_dinh=""):
     return val if val else mac_dinh
 
 def kiem_tra_config(cfg):
+    # Ưu tiên đọc từ environment variables (GitHub Actions Secrets)
+    env_map = {
+        "pancake_api_key":        "PANCAKE_API_KEY",
+        "pancake_shop_id":        "PANCAKE_SHOP_ID",
+        "webcake_api_key":        "WEBCAKE_API_KEY",
+        "webcake_refresh_token":  "WEBCAKE_REFRESH_TOKEN",
+        "github_token":           "GH_TOKEN_PAT",
+        "so_luong_ban_toi_thieu": "SO_LUONG_BAN_TOI_THIEU",
+    }
+    for cfg_key, env_key in env_map.items():
+        val = os.environ.get(env_key, "")
+        if val:
+            if cfg_key == "so_luong_ban_toi_thieu":
+                cfg[cfg_key] = int(val) if val.isdigit() else cfg[cfg_key]
+            else:
+                cfg[cfg_key] = val
+
     thieu = not cfg["pancake_api_key"] or not cfg["pancake_shop_id"]
     if not thieu:
         return cfg
+
+    # Chỉ hỏi khi chạy local (có terminal)
+    if not sys.stdin.isatty():
+        print("❌ Thiếu config và không có terminal — dừng lại")
+        sys.exit(1)
 
     print("\n⚙️  THIẾT LẬP LẦN ĐẦU\n")
     cfg["pancake_api_key"]        = nhap("Pancake API Key", cfg["pancake_api_key"])
@@ -699,7 +722,7 @@ def main():
     cap_nhat_html_file(HTML_FILES["new"],     "new",     new_list)
 
     # ── Push GitHub ──
-    push_all_github(cfg)
+    push_all_github(cfg)  # Bỏ comment khi cần push
 
     # ── Tóm tắt ──
     print("\n" + "=" * 56)
