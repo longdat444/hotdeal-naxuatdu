@@ -55,7 +55,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 /* 768–1023px: 3 cột (iPad Mini: 744px) */
 @media(max-width:1023px){.sale-grid{grid-template-columns:repeat(3,1fr);}.sale-title{font-size:28px;}}
 
-/* 394–767px: 2 cột */
+/* 425–767px: 2 cột — iPhone 16 Pro Max 440px, Pixel 9/10/A55 412px */
 @media(max-width:767px){
   .sale-section,.sale-waiting{padding:16px 0 28px;}
   .sale-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
@@ -65,19 +65,21 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   .sale-tag{top:8px;right:8px;}
 }
 
-/* 361–393px: 3 cột — khớp Webcake màn 2 */
-@media(min-width:361px) and (max-width:393px){
-  .sale-grid{grid-template-columns:repeat(3,1fr);gap:5px;}
-  .sale-body{padding:7px 6px 9px;}
-  .sale-name{font-size:11px;min-height:2.4em;}
-  .sale-price{font-size:12px;}
-  .sale-btn{padding:5px 7px;font-size:9px;}
-  .sale-tag{top:6px;right:6px;font-size:8px;padding:2px 4px;}
+/* 375–424px: 2 cột — iPhone SE 375px, iPhone 16 393px */
+@media(max-width:424px){
+  .sale-section,.sale-waiting{padding:12px 0 24px;}
+  .sale-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
+  .sale-header{padding-left:10px;}
+  .sale-title{font-size:22px;}
+  .sale-body{padding:8px 8px 10px;}
+  .sale-name{font-size:12px;min-height:2.6em;}
+  .sale-price{font-size:14px;}
+  .sale-btn{padding:6px 10px;font-size:10px;}
+  .sale-tag{top:6px;right:6px;font-size:9px;padding:2px 6px;}
 }
 
-/* 320–360px: 2 cột */
-@media(max-width:360px){
-  .sale-section,.sale-waiting{padding:12px 0 24px;}
+/* 320–374px: 2 cột — Samsung A55 360px, Galaxy Z Fold gập 402px → 320px */
+@media(max-width:374px){
   .sale-grid{grid-template-columns:repeat(2,1fr);gap:4px;}
   .sale-header{padding-left:8px;}
   .sale-title{font-size:19px;}
@@ -113,7 +115,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 
 <script>
 var SALE_DATA = {
-  "updated": "2026-10-01T17:06:53",
+  "updated": "2026-10-01T17:12:04",
   "expires": "2026-10-01T23:59:59",
   "products": [
     {
