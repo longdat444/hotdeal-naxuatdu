@@ -395,7 +395,7 @@ body {
   .hd-title { font-size: 28px; }
 }
 
-/* 394–767px: 2 cột */
+/* 425–767px: 2 cột — iPhone 16 Pro Max 440px, Pixel 9/10/A55 412px */
 @media (max-width: 767px) {
   .hd-section, .hd-waiting { padding: 16px 0 28px; }
   .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -407,19 +407,24 @@ body {
   .hd-body { padding: 10px 10px 12px; }
 }
 
-/* 361–393px: 3 cột — khớp Webcake màn 2 */
-@media (min-width: 361px) and (max-width: 393px) {
-  .hd-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
-  .hd-body { padding: 7px 6px 9px; }
-  .hd-name { font-size: 11px; }
-  .hd-sku { font-size: 10px; margin-bottom: 5px; }
-  .hd-price { font-size: 12px; }
-  .hd-buy-btn { padding: 5px 7px; font-size: 9px; }
-  .hd-rank { width: 18px; height: 18px; font-size: 9px; top: 6px; left: 6px; }
+/* 375–424px: 2 cột — iPhone SE 375px, iPhone 16 393px */
+@media (max-width: 424px) {
+  .hd-section, .hd-waiting { padding: 12px 0 24px; }
+  .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .hd-header { padding: 0 10px; }
+  .hd-title { font-size: 22px; }
+  .hd-cd-num { font-size: 22px; }
+  .hd-sold-bar-wrap { padding: 8px 8px 0; }
+  .hd-body { padding: 8px 8px 10px; }
+  .hd-name { font-size: 12px; }
+  .hd-price { font-size: 14px; }
+  .hd-buy-btn { padding: 6px 10px; font-size: 10px; }
+  .hd-rank { width: 20px; height: 20px; font-size: 10px; top: 8px; left: 8px; }
+  .hd-rank.rank-1 { width: 24px; height: 24px; font-size: 11px; }
 }
 
-/* 320–360px: 2 cột */
-@media (max-width: 360px) {
+/* 320–374px: 2 cột — Samsung A55 360px, Galaxy Z Fold gập 402px → 320px */
+@media (max-width: 374px) {
   .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
   .hd-header { padding: 0 8px; }
   .hd-title { font-size: 19px; }
@@ -431,6 +436,9 @@ body {
   .hd-sku { font-size: 10px; margin-bottom: 6px; }
   .hd-price { font-size: 13px; }
   .hd-buy-btn { padding: 5px 8px; font-size: 10px; }
+  .hd-rank { width: 18px; height: 18px; font-size: 9px; top: 6px; left: 6px; }
+  .hd-rank.rank-1 { width: 22px; height: 22px; font-size: 10px; }
+}
 </style>
 </head>
 <body>
@@ -494,7 +502,7 @@ body {
 // HOT_DEAL_DATA bên dưới bằng data thật
 // ══════════════════════════════════════════
 var HOT_DEAL_DATA = {
-  "updated": "2026-10-01T17:06:53",
+  "updated": "2026-10-01T17:12:04",
   "expires": "2026-10-01T23:59:59",
   "products": [
     {
@@ -512,13 +520,23 @@ var HOT_DEAL_DATA = {
       "sku": "A546",
       "name": "Áo tay dài - A546",
       "price": "265.000đ",
-      "sold_today": 38,
+      "sold_today": 39,
       "stock": 999,
       "image": "https://content.pancake.vn/web-media-264/5f/59/18/38/8a5c7d6df1a93e9cac40c7e10877e1235fbf60412e83f771397a4d84-w:2560-h:1920-l:208338-t:image/jpeg.jpeg",
       "link": "https://www.naxuatdu.vn/products/ao-tay-dai-a546"
     },
     {
       "rank": 3,
+      "sku": "B10",
+      "name": "Áo bra - B10",
+      "price": "99.000đ",
+      "sold_today": 11,
+      "stock": 999,
+      "image": "https://content.pancake.vn/web-media-263/e2/46/ed/b4/af346a72a501da10852368f1fb89429ad66f02fd99a34b25048ef61a-w:2160-h:2160-l:1296102-t:image/jpeg.jpeg",
+      "link": "https://www.naxuatdu.vn/products/ao-bra-b10"
+    },
+    {
+      "rank": 4,
       "sku": "S103",
       "name": "Set Bra - S103",
       "price": "125.000đ",
@@ -526,16 +544,6 @@ var HOT_DEAL_DATA = {
       "stock": 999,
       "image": "https://content.pancake.vn/web-media-263/17/56/d3/a8/8d7abb40e119331abdb8dd178d80454460856e30907cdcad3b724258-w:959-h:1280-l:131145-t:image/jpeg.jpeg",
       "link": "https://www.naxuatdu.vn/products/set-bra-s103"
-    },
-    {
-      "rank": 4,
-      "sku": "A371",
-      "name": "Áo khoác - A371",
-      "price": "335.000đ",
-      "sold_today": 10,
-      "stock": 999,
-      "image": "https://content.pancake.vn/web-media-263/d6/f3/0a/25/079256714759e7eae9c28376e7a7cc535a45f83a9aff53d3bcd20027-w:2564-h:1442-l:199547-t:image/jpeg.jpeg",
-      "link": "https://www.naxuatdu.vn/products/ao-khoac-a371"
     }
   ]
 };
