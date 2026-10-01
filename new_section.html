@@ -58,7 +58,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   .new-title{font-size:28px;}
 }
 
-/* 425–767px: 2 cột — iPhone 16 Pro Max 440px, Pixel 9/10/A55 412px */
+/* 394–767px: 2 cột */
 @media(max-width:767px){
   .new-section,.new-waiting{padding:16px 0 28px;}
   .new-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
@@ -67,21 +67,20 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   .new-body{padding:10px 10px 12px;}
 }
 
-/* 375–424px: 2 cột — iPhone SE 375px, iPhone 16 393px */
-@media(max-width:424px){
-  .new-section,.new-waiting{padding:12px 0 24px;}
-  .new-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
-  .new-header{padding-left:10px;}
-  .new-title{font-size:22px;}
-  .new-body{padding:8px 8px 10px;}
-  .new-name{font-size:12px;}
-  .new-price{font-size:14px;}
-  .new-btn{padding:6px 10px;font-size:10px;}
-  .new-tag{top:8px;left:8px;font-size:9px;padding:2px 6px;}
+/* 361–393px: 3 cột — khớp Webcake màn 2 */
+@media(min-width:361px) and (max-width:393px){
+  .new-grid{grid-template-columns:repeat(3,1fr);gap:5px;}
+  .new-body{padding:7px 6px 9px;}
+  .new-name{font-size:11px;}
+  .new-sku{font-size:10px;margin-bottom:5px;}
+  .new-price{font-size:12px;}
+  .new-btn{padding:5px 7px;font-size:9px;}
+  .new-tag{top:6px;left:6px;font-size:8px;padding:2px 4px;}
 }
 
-/* 320–374px: 2 cột — Samsung A55 360px, Galaxy Z Fold 402px (gập) → 320px */
-@media(max-width:374px){
+/* 320–360px: 2 cột */
+@media(max-width:360px){
+  .new-section,.new-waiting{padding:12px 0 24px;}
   .new-grid{grid-template-columns:repeat(2,1fr);gap:4px;}
   .new-header{padding-left:8px;}
   .new-title{font-size:19px;}
