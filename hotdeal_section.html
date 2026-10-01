@@ -395,7 +395,7 @@ body {
   .hd-title { font-size: 28px; }
 }
 
-/* 425–767px: 2 cột — iPhone 16 Pro Max 440px, Pixel 9/10/A55 412px */
+/* 394–767px: 2 cột */
 @media (max-width: 767px) {
   .hd-section, .hd-waiting { padding: 16px 0 28px; }
   .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -407,24 +407,19 @@ body {
   .hd-body { padding: 10px 10px 12px; }
 }
 
-/* 375–424px: 2 cột — iPhone SE 375px, iPhone 16 393px */
-@media (max-width: 424px) {
-  .hd-section, .hd-waiting { padding: 12px 0 24px; }
-  .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  .hd-header { padding: 0 10px; }
-  .hd-title { font-size: 22px; }
-  .hd-cd-num { font-size: 22px; }
-  .hd-sold-bar-wrap { padding: 8px 8px 0; }
-  .hd-body { padding: 8px 8px 10px; }
-  .hd-name { font-size: 12px; }
-  .hd-price { font-size: 14px; }
-  .hd-buy-btn { padding: 6px 10px; font-size: 10px; }
-  .hd-rank { width: 20px; height: 20px; font-size: 10px; top: 8px; left: 8px; }
-  .hd-rank.rank-1 { width: 24px; height: 24px; font-size: 11px; }
+/* 361–393px: 3 cột — khớp Webcake màn 2 */
+@media (min-width: 361px) and (max-width: 393px) {
+  .hd-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .hd-body { padding: 7px 6px 9px; }
+  .hd-name { font-size: 11px; }
+  .hd-sku { font-size: 10px; margin-bottom: 5px; }
+  .hd-price { font-size: 12px; }
+  .hd-buy-btn { padding: 5px 7px; font-size: 9px; }
+  .hd-rank { width: 18px; height: 18px; font-size: 9px; top: 6px; left: 6px; }
 }
 
-/* 320–374px: 2 cột — Samsung A55 360px, Galaxy Z Fold gập 402px → 320px */
-@media (max-width: 374px) {
+/* 320–360px: 2 cột */
+@media (max-width: 360px) {
   .hd-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
   .hd-header { padding: 0 8px; }
   .hd-title { font-size: 19px; }
@@ -436,9 +431,6 @@ body {
   .hd-sku { font-size: 10px; margin-bottom: 6px; }
   .hd-price { font-size: 13px; }
   .hd-buy-btn { padding: 5px 8px; font-size: 10px; }
-  .hd-rank { width: 18px; height: 18px; font-size: 9px; top: 6px; left: 6px; }
-  .hd-rank.rank-1 { width: 22px; height: 22px; font-size: 10px; }
-}
 </style>
 </head>
 <body>
