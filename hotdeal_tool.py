@@ -306,14 +306,21 @@ def dem_qty_hom_nay(cfg):
             "endDateTime":   end_ts,
             "option_sort":   "inserted_at_desc",
         }
-        try:
-            r    = requests.get(url, params=params, timeout=40)
-            r.raise_for_status()
-            resp = r.json()
-        except Exception as e:
-            print(f"  ⚠️  Lỗi trang {page}: {e} — thử lại...")
-            time.sleep(2)
-            continue
+        retry = 0
+        resp  = None
+        while retry < 3:
+            try:
+                r    = requests.get(url, params=params, timeout=40)
+                r.raise_for_status()
+                resp = r.json()
+                break
+            except Exception as e:
+                retry += 1
+                print(f"  ⚠️  Lỗi trang {page} (lần {retry}/3): {e} — thử lại...")
+                time.sleep(2 * retry)
+        if resp is None:
+            print(f"  ❌ Bỏ qua trang {page} sau 3 lần thử")
+            break
 
         data        = resp.get("data", [])
         total_pages = resp.get("total_pages", 1)
@@ -395,7 +402,7 @@ def lay_hang_moi_tu_pancake(cfg, slug_map):
         images     = v.get("images", []) or []
         image      = images[0] if images else ""
         product_id = v.get("product_id", "")
-        link       = slug_map.get(sku, "")
+        link       = slug_map.get(sku, f"{WEBCAKE_DOMAIN}/products/{sku.lower()}" if sku else "")
         if not sku or not name or not image or price <= 0 or not product_id:
             return None
         if "SALE" in name.upper():
@@ -505,8 +512,9 @@ def loc_hot_deal(qty_map, slug_map, info_map, cfg):
 
 
 def loc_sale(slug_map, info_map, cfg):
-    """SP có chữ SALE trong tên, đang published, có ảnh"""
-    so_hien = cfg["so_sp_hien_thi"]
+    """SP có chữ SALE trong tên, đang published, có ảnh.
+    Lấy TẤT CẢ SP SALE (không giới hạn so_sp_hien_thi) để carousel
+    HTML có đủ dữ liệu hiển thị nhiều trang."""
     result  = []
 
     for sku, info in info_map.items():
@@ -524,8 +532,8 @@ def loc_sale(slug_map, info_map, cfg):
             "image": info.get("image", ""), "stock": 999, "link": link,
         })
 
-    print(f"  ✅ Xả Kho/SALE: {len(result[:so_hien])} SP")
-    return result[:so_hien]
+    print(f"  ✅ Xả Kho/SALE: {len(result)} SP")
+    return result
 
 
 def loc_hang_moi(slug_map, info_map, cfg):
@@ -603,7 +611,8 @@ def cap_nhat_html_file(file_name, section_key, san_pham, expired=False):
 
     data_json = json.dumps(data_obj, ensure_ascii=False, indent=2)
     pattern   = rf'(var {var_name}\s*=\s*)\{{[\s\S]*?\}}(\s*;)'
-    new_html, count = re.subn(pattern, r'\g<1>' + data_json + r'\2', html)
+    # Dùng lambda để tránh lỗi khi data_json chứa backslash (ví dụ tên SP có \")
+    new_html, count = re.subn(pattern, lambda m: m.group(1) + data_json + m.group(2), html)
 
     if count == 0:
         print(f"  ❌ Không tìm thấy {var_name} trong {file_name}")
@@ -628,7 +637,7 @@ def git_push(cfg):
 
     if not token or not username or not repo:
         print("\n⚠️  Chưa có GitHub Token/Username/Repo — bỏ qua push")
-        print("   Chạy: py hotdeal_tool_test.py --config để nhập")
+        print("   Chạy: py hotdeal_tool.py --config để nhập")
         return False
 
     print("\n📤 Đang push lên GitHub Pages...")
@@ -702,7 +711,7 @@ def main():
 
     print(f"\n  Ngưỡng Hot Deal : {cfg['so_luong_ban_toi_thieu']} đơn/ngày")
     print(f"  Số SP/section   : {cfg['so_sp_hien_thi']} sản phẩm")
-    print(f"  (Đổi cấu hình  : py hotdeal_tool_test.py --config)\n")
+    print(f"  (Đổi cấu hình  : py hotdeal_tool.py --config)\n")
 
     # ── Bước 1: Webcake ──
     print("📡 Bước 1/3 — Kéo sản phẩm từ Webcake...")
